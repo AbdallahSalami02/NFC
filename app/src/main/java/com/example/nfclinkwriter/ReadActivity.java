@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import java.util.Arrays;
 
 public class ReadActivity extends AppCompatActivity {
 
@@ -58,7 +59,7 @@ public class ReadActivity extends AppCompatActivity {
 
         for (NdefRecord record : records) {
             if (record.getTnf() == NdefRecord.TNF_WELL_KNOWN &&
-                record.getType()[0] == NdefRecord.RTD_URI) {
+                Arrays.equals(record.getType(), NdefRecord.RTD_URI)) {
                 String url = new String(record.getPayload());
                 urlTextView.setText(url);
             }
