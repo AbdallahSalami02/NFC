@@ -18,10 +18,9 @@ jobs:
       with:
         java-version: '11'
         distribution: 'temurin'
-        license: 'MIT'
     
     - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
+      run: chmod +x gradlew || true
     
     - name: Build APK
       run: ./gradlew assembleDebug
