@@ -1,6 +1,8 @@
 package com.example.nfclinkwriter;
 
 import android.app.Activity;
+import android.app.PendingIntent;
+import android.content.IntentFilter;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -24,6 +26,8 @@ public class WriteActivity extends AppCompatActivity {
 
     private static final int PICK_IMAGE_REQUEST = 1;
     private NfcAdapter nfcAdapter;
+    private PendingIntent pendingIntent;
+    private IntentFilter[] intentFilters;
     private EditText urlEditText;
     private ImageView iconImageView;
     private Bitmap selectedIcon;
@@ -40,6 +44,13 @@ public class WriteActivity extends AppCompatActivity {
         Button writeButton = findViewById(R.id.btnWriteTag);
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
+
+        pendingIntent = PendingIntent.getActivity(
+            this, 0, new Intent(this, getClass())
+                .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP),
+            PendingIntent.FLAG_MUTABLE);
+        intentFilters = new IntentFilter[]{
+            new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED)};
 
         selectIconButton.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_PICK,
@@ -69,6 +80,22 @@ public class WriteActivity extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (nfcAdapter != null && pendingIntent != null) {
+            nfcAdapter.enableForegroundDispatch(this, pendingIntent, intentFilters, null);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (nfcAdapter != null) {
+            nfcAdapter.disableForegroundDispatch(this);
         }
     }
 
