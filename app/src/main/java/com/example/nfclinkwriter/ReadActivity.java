@@ -63,7 +63,7 @@ public class ReadActivity extends AppCompatActivity {
                 String url = new String(record.getPayload());
                 urlTextView.setText(url);
             }
-            if (record.getTnf() == NdefRecord.TNF_MIME &&
+            if (                record.getTnf() == NdefRecord.TNF_MIME_MEDIA &&
                 new String(record.getType()).equals("image/png")) {
                 byte[] iconBytes = record.getPayload();
                 Bitmap icon = BitmapFactory.decodeByteArray(
